@@ -25,6 +25,7 @@ body {
   justify-content: center;
   padding: 1rem;
   text-align: center;
+  overflow: hidden; /* las letras que caen desaparecen al salir de la portada */
 }
 
 .portada__fondo {
@@ -51,6 +52,40 @@ body {
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: -0.04em;
+}
+
+.portada__sub {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.25rem, 4.5vw, 3rem);
+  line-height: 1.2;
+  color: #fbbf24;
+}
+
+.letras__palabra {
+  white-space: nowrap;
+}
+
+/* caja con el ancho de la letra; el canvas de FuzzyText se acomoda encima con las medidas de LetrasFuzzy */
+.letra {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+}
+
+.letra canvas {
+  position: absolute;
+  left: var(--x);
+  bottom: var(--y);
+  pointer-events: none;
+}
+
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .portada__pista {

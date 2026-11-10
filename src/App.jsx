@@ -4,18 +4,53 @@ import ScrollExpand from './components/ScrollExpand.jsx'
 import ScrollFloat from './components/ScrollFloat.jsx'
 import ScrollReveal from './components/ScrollReveal.jsx'
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack.jsx'
-import SplitText from './components/SplitText.jsx'
+import { useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
+import LetrasFuzzy from './components/LetrasFuzzy.jsx'
 import { momentos } from './momentos.js'
 
+gsap.registerPlugin(ScrollTrigger, useGSAP)
+
 function App() {
+  const portada = useRef(null)
+
+  // Al deslizar, las letras de la portada se sueltan una por una y caen
+  useGSAP(
+    () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      gsap.to('.letra', {
+        y: () => window.innerHeight,
+        rotation: 'random(-120, 120)',
+        ease: 'power1.in',
+        duration: 0.4,
+        stagger: { amount: 0.6, from: 'random' },
+        scrollTrigger: {
+          trigger: portada.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+    },
+    { scope: portada }
+  )
+
   return (
     <main>
-      <section className="portada">
+      <section className="portada" ref={portada}>
         <div className="portada__fondo">
           <Aurora colorStops={['#7c3aed', '#f59e0b', '#7c3aed']} mouseInteraction={false} />
         </div>
         <p className="portada__pre">Momentos para no olvidar</p>
-        <SplitText tag="h1" text="El Carlos" className="portada__titulo" trigger="load" />
+        <h1 className="portada__titulo">
+          <LetrasFuzzy texto="El Carlos" />
+        </h1>
+        <p className="portada__sub">
+          <LetrasFuzzy texto="y su descenso a la locura" fuzzRange={12} />
+        </p>
         <p className="portada__pista">desliza ↓</p>
       </section>
 
